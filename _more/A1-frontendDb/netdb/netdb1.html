@@ -1,0 +1,11 @@
+<script src="dist/nedb.min.js"></script>
+<script>
+  var db = new Nedb();   // Create an in-memory only datastore
+  
+  db.insert({ planet: 'Earth' }, function (err) {
+   db.find({}, function (err, docs) {
+     console.log('docs=', docs)
+     // docs contains the two planets Earth and Mars
+   });
+  });
+</script>

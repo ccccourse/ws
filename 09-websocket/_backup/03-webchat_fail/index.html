@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="display-4">Send Message</h1>
+        <div class="row">
+            <div class="col col-md-2 col-xs-3">
+                <input id="name" class="form-control" placeholder="Name" >
+            </div>
+            <div class="col col-md-8 col-xs-7">
+                <input id="message" class="form-control" placeholder="Your Message Here">
+            </div>
+            <div class="col col-md-2 col-xs-2">
+                <button id="send" class="btn btn-success">Send</button>
+            </div>
+        </div>
+        <br />
+        <div id="messages">
+        </div>
+    </div>
+</body>
+<script>
+    let ws;
+    $(() => {
+        ws = new WebSocket("ws://localhost:8000/");
+        ws.onopen = function (event) {
+            console.log("Socket connection is open");
+            ws.send(JSON.stringify({ event: "open", data: {} }));
+        };
+        ws.onmessage = function (event) {
+            console.log("Message received ");
+            const data = JSON.parse(event.data);
+            addMessages(data.data)
+        };
+        $("#send").click(() => {
+            if ($("#name").val().trim() != "") {
+                if($("#message").val().trim() !=""){
+                    sendMessage({
+                        name: $("#name").val(),
+                        message: $("#message").val()
+                    });
+                }
+                else{
+                    alert("Please enter your message");
+                }
+            }
+            else {
+                alert("Please enter your name");
+            }
+        })
+    })
+    function addMessages(message) {
+        $("#messages").append(
+            `<p> <b>${message.name}</b>  :  ${message.message} </p>`
+        )
+    }
+    function sendMessage(message) {
+        ws.send(JSON.stringify({ event: "message", data: message }));
+        $("#message").val("");
+    }
+</script>
+</html>

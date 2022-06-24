@@ -1,0 +1,12 @@
+<%- include('header.ejs') %>
+<h1>Search Result</h1>
+<ul id="posts">
+  <% for (let doc of docs) { %>
+    <li>
+      <h2><%=doc.title%></h2>
+      <p><a href="<%= doc.url %>"><%= doc.url %></a></p>
+      <p><%=doc.page.substring(0, 100)%></p>
+    </li>
+  <% } %>
+</ul>
+<%- include('footer.ejs') %>

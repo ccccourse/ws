@@ -1,0 +1,106 @@
+<script src="dist/nedb.min.js"></script>
+<script>
+var shops = [
+  {
+    id: 'teashop',
+    name: '茶舖子',
+    address: '金門縣金寧鄉安美村湖南 33 號',
+    tel: '082-333333',
+    products: [
+      {id:'紅茶', price:20},
+      {id:'綠茶', price:20}, 
+      {id:'珍珠奶茶', price:35},
+    ],
+    addons: [
+      {id:'去冰', price:0},
+      {id:'半糖', price:0}, 
+      {id:'熱', price:0},
+      {id:'加鮮奶', price:10},
+    ],
+  },
+  {
+    id: 'animalhost',
+    name: '動物寄養',
+    address: '金門縣金寧鄉安美村湖南 77 號',
+    tel: '082-777777',
+    products: [
+      {id:'白天貓狗寄養', price:300},
+    ],
+    addons: [
+      {id:'不含夜間', price:0},
+      {id:'含夜間', price:200},
+    ],
+  },
+  {
+    id: 'patientcare',
+    name: '病人照護',
+    address: '金門縣金寧鄉安美村湖南 88 號',
+    tel: '082-8888888',
+    products: [
+      {id:'自行送來(白天)', price:1200},
+      {id:'到府照料(白天)', price:2000},
+      {id:'自行送來(日夜)', price:2000},
+      {id:'到府照料(日夜)', price:3000},
+    ],
+    addons: [
+      {id:'自帶棉被', price:-200},
+      {id:'不自帶棉被', price:0},
+    ],
+  },
+]
+
+var users = [
+  {
+    id: 'ccc',
+    name: '陳鍾誠',
+    email: 'ccckmit@gmail.com',
+    tel: '082-333333',
+    shops: [ 
+      {id:'teashop', name:'茶舖子' }
+    ],
+  },
+  {
+    id: 'snoopy',
+    name: '史奴比',
+    email: 'snoopy@gmail.com',
+    tel: '082-12312312',
+    shops: [ 
+      {id:'animalhost', name:'動物寄養' }
+    ],
+  },
+  {
+    id: 'ngirl',
+    name: '南丁格爾',
+    email: 'ngirl@gmail.com',
+    tel: '082-23123121',
+    shops: [ 
+      {id:'patientcare', name:'病人照護' }
+    ],
+  },
+]
+
+  var db = {
+    shop:new Nedb()   // Create an in-memory only datastore
+  }
+  
+  for (var shop of shops) {
+    db.shop.insert(shop, function (err) {})
+  }
+  db.shop.find({'id':'animalhost'}, function (err, docs) {
+     console.log('docs=', docs)
+  })
+  var d1 = db.shop.find({'name':'動物寄養'})
+  console.log('d1=', d1)
+
+  db.shop.find({'name':'動物寄養'}, function (err, docs) {
+     console.log('docs=', docs)
+  })
+  db.shop.find({'products.price':{ $gte: 100 }}, function (err, docs) {
+     console.log('docs=', docs)
+     // docs contains the two planets Earth and Mars
+  })
+
+  db.shop.find({}).sort({ id: 1 }).skip(1).limit(1).exec(function (err, docs) {
+    console.log('find+skip+limit docs=', docs)
+  })
+</script>
